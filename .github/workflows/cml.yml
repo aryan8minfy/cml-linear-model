@@ -7,29 +7,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: 3.9
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+      - run: pip install -r requirements.txt
 
-      - name: Train the model
-        run: |
-          python train.py
+      - run: python train.py
 
-      - name: Run predictions and save output
-        run: |
-          python predict.py > result.txt
+      - run: python predict.py > result.txt
+
+      - name: Install CML
+        run: npm install -g @dvcorg/cml
 
       - name: Post CML Comment
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          pip install cml
-          cml comment create result.txt
+        run: cml comment create result.txt
